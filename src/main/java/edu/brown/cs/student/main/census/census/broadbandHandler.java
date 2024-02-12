@@ -10,6 +10,8 @@ This class sends back the broadband data from the ACS
 public class broadbandHandler implements Route{
     @Override
     public Object handle(Request request, Response response) throws Exception {
+        String state = request.queryParams("state");
+        String county = request.queryParams("county");
         return null;
     }
 }
