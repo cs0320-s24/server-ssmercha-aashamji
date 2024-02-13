@@ -1,8 +1,12 @@
 package edu.brown.cs.student.main.census;
 
-import spark.Request;
-import spark.Response;
-import spark.Route;
+import static spark.Spark.after;
+
+import edu.brown.cs.student.main.soup.Soup;
+import edu.brown.cs.student.main.soup.SoupAPIUtilities;
+import java.util.ArrayList;
+import java.util.List;
+import spark.Spark;
 
 public class Server {
         //this is the only method in server it should use Spark for the following: port, handlers, init, awaitInitialization
