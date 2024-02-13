@@ -17,11 +17,12 @@ public class Server {
                         response.header("Access-Control-Allow-Methods", "*");
                     });
 
-            Spark.get("/", (req, res) -> "welcome to the census server.");
+            Spark.get("/", (req, res) -> "welcome to the server.");
 
             Spark.get("load", new loadHandler());
             Spark.get("search", new searchHandler());
             Spark.get("view", new viewHandler());
+            Spark.get("broadband", new broadbandHandler());
 
             Spark.init();
             Spark.awaitInitialization();
