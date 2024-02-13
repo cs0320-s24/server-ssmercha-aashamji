@@ -1,12 +1,11 @@
-package edu.brown.cs.student.main.census;
+package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
-import edu.brown.cs.student.main.census.csv.loadHandler;
-import edu.brown.cs.student.main.census.csv.searchHandler;
-import edu.brown.cs.student.main.census.csv.viewHandler;
-import edu.brown.cs.student.main.census.census.broadbandHandler;
-import java.util.ArrayList;
-import java.util.List;
+
+import edu.brown.cs.student.main.server.census.broadbandHandler;
+import edu.brown.cs.student.main.server.csv.loadHandler;
+import edu.brown.cs.student.main.server.csv.searchHandler;
+import edu.brown.cs.student.main.server.csv.viewHandler;
 import spark.Spark;
 
 public class Server {

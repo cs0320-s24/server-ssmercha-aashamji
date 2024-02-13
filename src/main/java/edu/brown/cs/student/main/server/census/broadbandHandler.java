@@ -1,13 +1,10 @@
-package edu.brown.cs.student.main.census;
+package edu.brown.cs.student.main.server.census;
 
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-/*
-This class will load a specific csv file given a path
-* */
-public class loadHandler implements Route {
+public class broadbandHandler implements Route {
   @Override
   public Object handle(Request request, Response response) throws Exception {
     return null;
