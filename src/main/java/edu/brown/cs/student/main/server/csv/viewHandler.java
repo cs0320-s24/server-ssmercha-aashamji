@@ -1,6 +1,6 @@
 package edu.brown.cs.student.main.server.csv;
 
-import edu.brown.cs.student.main.server.Parser;
+import edu.brown.cs.student.main.server.OrganizedData;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -13,10 +13,10 @@ This class sends back the entire CSV file's contents as a Json 2-dimensional arr
 * */
 public class viewHandler implements Route {
 
-  private static Parser myParser;
+  private static OrganizedData myData;
 
-  public viewHandler(Parser p) {
-    myParser = p;
+  public viewHandler(OrganizedData o) {
+    myData = o;
   }
 
   @Override
@@ -25,7 +25,7 @@ public class viewHandler implements Route {
     Map<String, Object> responseMap = new HashMap<>();
     ;
     try {
-      responseMap.put("data", myParser.parsedData);
+      responseMap.put("data", myData.results);
       responseMap.put("result", "success");
     } catch (NullPointerException e) {
       System.err.println("cannot access data");

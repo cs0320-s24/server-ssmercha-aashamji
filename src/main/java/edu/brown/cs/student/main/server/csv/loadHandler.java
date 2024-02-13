@@ -1,5 +1,6 @@
 package edu.brown.cs.student.main.server.csv;
 
+import edu.brown.cs.student.main.server.OrganizedData;
 import edu.brown.cs.student.main.server.Parser;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,10 +16,10 @@ This class will load a specific csv file given a path
 * */
 public class loadHandler implements Route {
 
-  private static Parser myParser;
+  private static OrganizedData myData;
 
-  public loadHandler(Parser p) {
-    myParser = p;
+  public loadHandler(OrganizedData o) {
+    myData = o;
   }
 
   @Override
@@ -38,8 +39,9 @@ public class loadHandler implements Route {
     Strat s = new Strat();
 
     try {
-      myParser = new Parser<>(f, s, 1);
+      Parser p = new Parser<>(f, s, 1);
       responseMap.put("result", "success");
+      myData.updateList(p.parsedData);
       //      responseMap.put("data", p.parsedData);
     } catch (IOException | FactoryFailureException e) {
       System.err.println("Sorry, that file cannot be parsed.");

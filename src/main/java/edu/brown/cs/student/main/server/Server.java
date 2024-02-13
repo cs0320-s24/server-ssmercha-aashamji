@@ -28,11 +28,11 @@ public class Server {
 
     Spark.get("/", (req, res) -> "welcome to the server.");
 
-    Parser p = null;
+    OrganizedData o = new OrganizedData();
 
-    Spark.get("loadcsv", new loadHandler(p));
+    Spark.get("loadcsv", new loadHandler(o));
     Spark.get("searchcsv", new searchHandler());
-    Spark.get("viewcsv", new viewHandler(p));
+    Spark.get("viewcsv", new viewHandler(o));
     Spark.get("broadband", new broadbandHandler());
 
     Spark.init();
