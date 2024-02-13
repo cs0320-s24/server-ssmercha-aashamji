@@ -3,17 +3,21 @@ package edu.brown.cs.student.main.server;
 import static spark.Spark.after;
 
 import edu.brown.cs.student.main.server.census.broadbandHandler;
-import edu.brown.cs.student.main.server.csv.loadHandler;
-import edu.brown.cs.student.main.server.csv.searchHandler;
-import edu.brown.cs.student.main.server.csv.viewHandler;
+import edu.brown.cs.student.main.server.csv.*;
+import java.io.IOException;
 import spark.Spark;
 
 public class Server {
-  // this is the only method in server it should use Spark for the following: port, handlers, init,
-  // awaitInitialization
-  // reference gear up code
-  public static void main(String[] args) {
-    int port = 3232;
+
+  //  private static Parser p;
+  //
+  //  public Server(Parser givenParser) {
+  //    // Use whatever was dependency-injected into this constructor
+  //    p = givenParser;
+  //  }
+
+  public static void main(String[] args) throws IOException, FactoryFailureException {
+    int port = 3233;
     Spark.port(port);
 
     after(
@@ -24,9 +28,11 @@ public class Server {
 
     Spark.get("/", (req, res) -> "welcome to the server.");
 
-    Spark.get("load", new loadHandler());
-    Spark.get("search", new searchHandler());
-    Spark.get("view", new viewHandler());
+    Parser p = null;
+
+    Spark.get("loadcsv", new loadHandler(p));
+    Spark.get("searchcsv", new searchHandler());
+    Spark.get("viewcsv", new viewHandler(p));
     Spark.get("broadband", new broadbandHandler());
 
     Spark.init();
