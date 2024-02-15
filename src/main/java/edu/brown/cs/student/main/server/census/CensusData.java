@@ -1,3 +1,4 @@
 package edu.brown.cs.student.main.server.census;
+import java.util.List;
 
-public class CensusData {}
+public record CensusData(List<String> entry) {}
