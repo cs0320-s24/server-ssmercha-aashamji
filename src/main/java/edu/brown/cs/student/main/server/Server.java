@@ -9,13 +9,6 @@ import spark.Spark;
 
 public class Server {
 
-  //  private static Parser p;
-  //
-  //  public Server(Parser givenParser) {
-  //    // Use whatever was dependency-injected into this constructor
-  //    p = givenParser;
-  //  }
-
   public static void main(String[] args) throws IOException, FactoryFailureException {
     int port = 3233;
     Spark.port(port);
@@ -31,7 +24,7 @@ public class Server {
     OrganizedData o = new OrganizedData();
 
     Spark.get("loadcsv", new loadHandler(o));
-    Spark.get("searchcsv", new searchHandler());
+    Spark.get("searchcsv", new searchHandler(o));
     Spark.get("viewcsv", new viewHandler(o));
     Spark.get("broadband", new broadbandHandler());
 

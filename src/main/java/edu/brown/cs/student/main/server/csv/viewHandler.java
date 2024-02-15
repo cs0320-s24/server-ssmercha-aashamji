@@ -23,13 +23,16 @@ public class viewHandler implements Route {
   public Object handle(Request request, Response response) throws Exception {
     Set<String> params = request.queryParams();
     Map<String, Object> responseMap = new HashMap<>();
-    ;
-    try {
-      responseMap.put("data", myData.results);
-      responseMap.put("result", "success");
-    } catch (NullPointerException e) {
-      System.err.println("cannot access data");
-      responseMap.put("result", "failed");
+    if (myData.isLoaded()) {
+      try {
+        responseMap.put("data", myData.results);
+        responseMap.put("result", "success");
+      } catch (NullPointerException e) {
+        System.err.println("cannot access data");
+        responseMap.put("result", "failed");
+      }
+    } else {
+      responseMap.put("result", "failed: cannot view file that has not been loaded");
     }
     return responseMap;
   }

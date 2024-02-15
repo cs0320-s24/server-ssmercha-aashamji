@@ -5,12 +5,30 @@ import java.util.List;
 
 public class OrganizedData {
   public List results;
+  public Parser<List<String>> myParser;
+  boolean loaded;
 
   public OrganizedData() {
     results = new ArrayList<>();
+    loaded = false;
   }
 
   public void updateList(List given) {
-    this.results = given;
+    this.results = List.copyOf(given);
+  }
+
+  public void parserRef(Parser p) {
+    myParser = p;
+  }
+
+  public void updateState() {
+    loaded = true;
+  }
+
+  public boolean isLoaded() {
+    if (loaded) {
+      return true;
+    }
+    return false;
   }
 }
