@@ -25,7 +25,7 @@ public class searchHandler implements Route {
     Map<String, Object> responseMap = new HashMap<>();
     String filepath = request.queryParams("filepath");
     if (myData.isLoaded()) {
-      Searcher look = new Searcher(myData.myParser, "data/stardata.csv");
+      Searcher look = new Searcher(myData.myParser, filepath);
       // TODO: multiple query parameters so we can actually search
 
       //

@@ -1,6 +1,10 @@
 package edu.brown.cs.student.main.server.csv;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.server.OrganizedData;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +27,11 @@ public class viewHandler implements Route {
   public Object handle(Request request, Response response) throws Exception {
     Set<String> params = request.queryParams();
     Map<String, Object> responseMap = new HashMap<>();
+
+    Moshi moshi = new Moshi.Builder().build();
+    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
+    JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
+
     if (myData.isLoaded()) {
       try {
         responseMap.put("data", myData.results);
@@ -34,6 +43,6 @@ public class viewHandler implements Route {
     } else {
       responseMap.put("result", "failed: cannot view file that has not been loaded");
     }
-    return responseMap;
+    return adapter.toJson(responseMap);
   }
 }
