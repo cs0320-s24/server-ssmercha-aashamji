@@ -23,8 +23,6 @@ public class broadbandHandler implements Route {
 
     List<List<String>> stateCodesList = CensusAPIUtilities.deserialize(states);
     Map<String, String> stateCodesMap = CensusAPIUtilities.listToMap(stateCodesList, 0);
-    System.out.println("here");
-    //    System.out.println(stateCodesMap);
 
     String sCode = stateCodesMap.get(state);
     String counties = this.sendCountyCodesRequest(sCode);
@@ -32,14 +30,9 @@ public class broadbandHandler implements Route {
     Map<String, String> countyCodesMap = CensusAPIUtilities.listToMap(countyCodesList, 1);
     String countyCode = countyCodesMap.get(county + ", " + state);
 
-    System.out.println("\ninput to get: " + county + ", " + state);
-    System.out.println("county: " + county);
-    System.out.println("state code: " + sCode + " county code: " + countyCode);
 
     String broadBandPercentage = this.sendBroadBandRequest(sCode, countyCode);
-    System.out.println("broadBandResult: " + broadBandPercentage);
     List<List<String>> broadBandList = CensusAPIUtilities.deserialize(broadBandPercentage);
-    System.out.println("percentage: " + broadBandList.get(1).get(1));
 
     Map<String, Object> responseMap = new HashMap<>();
     responseMap.put("broadband Access Percentage", broadBandList.get(1).get(1));
@@ -66,10 +59,6 @@ public class broadbandHandler implements Route {
             .build()
             .send(buildBoredApiRequest, HttpResponse.BodyHandlers.ofString());
 
-    //    System.out.println(sentBoredApiResponse);
-    //    System.out.println(sentBoredApiResponse.body());
-    System.out.println("finished percentage request");
-
     return sentBoredApiResponse.body();
   }
 
@@ -89,10 +78,6 @@ public class broadbandHandler implements Route {
             .build()
             .send(buildBoredApiRequest, HttpResponse.BodyHandlers.ofString());
 
-    //    System.out.println(sentBoredApiResponse);
-    //    System.out.println(sentBoredApiResponse.body());
-    System.out.println("finished county request");
-
     return sentBoredApiResponse.body();
   }
 
@@ -108,10 +93,6 @@ public class broadbandHandler implements Route {
         HttpClient.newBuilder()
             .build()
             .send(buildBoredApiRequest, HttpResponse.BodyHandlers.ofString());
-
-    //    System.out.println(sentBoredApiResponse);
-    //    System.out.println(sentBoredApiResponse.body());
-    System.out.println("finished state request");
 
     return sentBoredApiResponse.body();
   }
