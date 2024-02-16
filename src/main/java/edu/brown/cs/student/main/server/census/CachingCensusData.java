@@ -10,7 +10,8 @@ public class CachingCensusData implements CensusDataSource {
         this.original = original;
     }
 
-
-
-
+    @Override
+    public CensusData getData() throws IllegalArgumentException {
+        return null;
+    }
 }
