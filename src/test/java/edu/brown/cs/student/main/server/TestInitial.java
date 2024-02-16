@@ -1,17 +1,31 @@
 package edu.brown.cs.student.main.server;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.server.census.broadbandHandler;
 import edu.brown.cs.student.main.server.csv.loadHandler;
 import edu.brown.cs.student.main.server.csv.searchHandler;
 import edu.brown.cs.student.main.server.csv.viewHandler;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
+import okio.Buffer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import spark.Spark;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class TestInitial {
+  private final Type listListString = Types.newParameterizedType(List.class, List.class, String.class);
+  private JsonAdapter<List<List<String>>> adapter;
+
   @BeforeEach
   public void setup() {
     // In fact, restart the entire Spark server for every test!
@@ -23,6 +37,9 @@ public class TestInitial {
     Spark.get("broadband", new broadbandHandler());
     Spark.init();
     Spark.awaitInitialization(); // don't continue until the server is listening
+
+    Moshi moshi = new Moshi.Builder().build();
+    adapter = moshi.adapter(listListString);
   }
 
   @AfterEach
@@ -56,28 +73,20 @@ public class TestInitial {
     return clientConnection;
   }
 
-  //  @Test
+    @Test
   // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type
   // checker
-  //  public void testAPINoRecipes() throws IOException {
-  //    HttpURLConnection clientConnection = tryRequest("loadcsv");
-  //    // Get an OK response (the *connection* worked, the *API* provides an error response)
-  //    assertEquals(200, clientConnection.getResponseCode());
-  //
-  //    // Now we need to see whether we've got the expected Json response.
-  //    // SoupAPIUtilities handles ingredient lists, but that's not what we've got here.
-  //    Moshi moshi = new Moshi.Builder().build();
-  //    // We'll use okio's Buffer class here
-  //    OrderHandler.SoupNoRecipesFailureResponse response =
-  //            moshi
-  //                    .adapter(OrderHandler.SoupNoRecipesFailureResponse.class)
-  //                    .fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
-  //
-  //    System.out.println(response);
-  //    // ^ If that succeeds, we got the expected response. Notice that this is *NOT* an exception,
-  // but
-  //    // a real Json reply.
-  //
-  //    clientConnection.disconnect();
-  //  }
+    public void testAPINoRecipes() throws IOException {
+      HttpURLConnection clientConnection = tryRequest("loadcsv");
+      assertEquals(200, clientConnection.getResponseCode());
+
+      Moshi moshi = new Moshi.Builder().build();
+      // We'll use okio's Buffer class here
+      String response =
+              moshi
+                      .adapter(String.class)
+                      .fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
+
+      System.out.println(response);
+    }
 }

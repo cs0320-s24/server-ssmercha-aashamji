@@ -3,6 +3,8 @@ package edu.brown.cs.student.main.server.census;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +22,7 @@ public class CachingCensusData implements CensusDataSource {
             .expireAfterAccess(30, TimeUnit.MINUTES)
             .build(
                 new CacheLoader<String, CensusData>() {
+                  @NotNull
                   @Override
                   public CensusData load(String query) throws Exception {
                     return original.getData(query);
