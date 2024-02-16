@@ -5,12 +5,11 @@ import java.util.List;
 
 public class OrganizedData {
   public List results;
-  public Parser<List<String>> myParser;
+  public Parser myParser;
   boolean loaded;
 
   public OrganizedData() {
     results = new ArrayList<>();
-    loaded = false;
   }
 
   public void updateList(List given) {

@@ -1,9 +1,13 @@
 package edu.brown.cs.student.main.server.csv;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.server.OrganizedData;
 import edu.brown.cs.student.main.server.Parser;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,41 +31,29 @@ public class loadHandler implements Route {
   public Object handle(Request request, Response response) throws Exception {
     Set<String> params = request.queryParams();
     String filepath = request.queryParams("filepath");
+    String headers = request.queryParams("headers");
+    Integer h = Integer.parseInt(headers);
     Map<String, Object> responseMap = new HashMap<>();
 
+    Moshi moshi = new Moshi.Builder().build();
+    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
+    JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
+
     try {
-      System.out.println(filepath);
-      FileReader f = new FileReader(filepath); // TODO: fix this
+      FileReader f = new FileReader(filepath);
+      responseMap.put("filepath", filepath);
 
       Strat s = new Strat();
-      Parser<List<String>> p = new Parser<>(f, s, 1);
+      Parser<List<String>> p = new Parser<>(f, s, h);
 
       myData.updateList(p.parsedData);
       myData.parserRef(p);
       myData.updateState();
       responseMap.put("result", "success");
     } catch (FileNotFoundException | FactoryFailureException e) {
-      System.err.println("Sorry, you cannot load that file.");
-      responseMap.put("result", "failed");
+      responseMap.put("result", "error_file_loading");
     }
 
-    return responseMap;
+    return adapter.toJson(responseMap);
   }
 }
-
-/*
-* try {
-      System.out.println(filepath);
-      FileReader f = new FileReader("data/star.csv"); // TODO: fix this
-
-      Strat s = new Strat();
-      Parser p = new Parser<>(f, s, 1);
-      responseMap.put("result", "success");
-
-      myData.updateList(p.parsedData);
-      myData.parserRef(p);
-    } catch (FileNotFoundException | FactoryFailureException e) {
-      System.err.println("Sorry, you cannot load that file.");
-      responseMap.put("result", "failed");
-    }
-* */

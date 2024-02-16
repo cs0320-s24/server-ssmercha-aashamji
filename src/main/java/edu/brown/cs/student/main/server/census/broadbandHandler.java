@@ -1,6 +1,10 @@
 package edu.brown.cs.student.main.server.census;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -30,16 +34,20 @@ public class broadbandHandler implements Route {
     Map<String, String> countyCodesMap = CensusAPIUtilities.listToMap(countyCodesList, 1);
     String countyCode = countyCodesMap.get(county + ", " + state);
 
-
     String broadBandPercentage = this.sendBroadBandRequest(sCode, countyCode);
     List<List<String>> broadBandList = CensusAPIUtilities.deserialize(broadBandPercentage);
 
     Map<String, Object> responseMap = new HashMap<>();
+    responseMap.put("state", state);
+    responseMap.put("county", county);
     responseMap.put("broadband Access Percentage", broadBandList.get(1).get(1));
     responseMap.put("result", "success");
 
-    // TODO: return json moshi smth, not responseMap
-    return responseMap;
+    Moshi moshi = new Moshi.Builder().build();
+    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
+    JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
+
+    return adapter.toJson(responseMap);
   }
 
   private String sendBroadBandRequest(String sCode, String countyCode)

@@ -52,7 +52,7 @@ public class Parser<T> {
     while ((line = b.readLine()) != null) { // continue reading
       String[] result = regexSplitCSVRow.split(line);
       if ((rowSize != 0) && rowSize != result.length) {
-        error = "Error: Malformed data, inconsistent column number.";
+        error = "error_data_format";
       } else {
         rowSize = result.length;
         parsedData.add(c.create(List.of(result)));

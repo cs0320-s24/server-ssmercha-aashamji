@@ -17,14 +17,7 @@ public class Searcher {
   public Searcher(Parser<List<String>> p, String path) {
     this.myParser = p;
     if (!path.startsWith("data/")) { // if the file is in the wrong directory
-      System.out.println(path);
-      System.out.println(path.startsWith("data/"));
-      p.error = "You do not have access to that data.";
-      System.err.println("You do not have access to that data.");
-      return;
-    }
-    if (!this.myParser.error.equals("no error")) { // if there was a malformed row
-      System.err.println(myParser.error + " Incorrectly formatted rows of data have been omitted");
+      p.error = "error_datasource";
     }
     //    search(s, myParser);
   }
@@ -55,8 +48,7 @@ public class Searcher {
   public List<List<String>> search(String s, Integer colIndex) {
     int colCount = myParser.parsedData.get(0).size();
     if (colIndex >= colCount) { // if the column doesn't exist
-      this.myParser.error = "That column doesn't exist";
-      System.err.println("That column doesn't exist");
+      this.myParser.error = "error_bad_request";
       return searchResults;
     }
     for (int i = 0; i < myParser.parsedData.size(); i++) {
@@ -76,8 +68,7 @@ public class Searcher {
    */
   public List<List<String>> search(String s, String colHeader) {
     if (!myParser.headerToIndex.containsKey(colHeader)) { // if the column doesn't exist
-      myParser.error = "That column does not exist.";
-      System.err.println("That column does not exist.");
+      myParser.error = "error_bad_request";
       return searchResults;
     }
     return search(s, myParser.headerToIndex.get(colHeader));

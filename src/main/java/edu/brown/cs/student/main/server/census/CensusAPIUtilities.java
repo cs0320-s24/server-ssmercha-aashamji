@@ -19,7 +19,6 @@ public class CensusAPIUtilities {
 
       Type listStringObject = Types.newParameterizedType(List.class, List.class, String.class);
       JsonAdapter<List<List<String>>> adapter = moshi.adapter(listStringObject);
-      //      System.out.println(json);
       return adapter.fromJson(json);
     } catch (Exception e) {
       e.printStackTrace();
