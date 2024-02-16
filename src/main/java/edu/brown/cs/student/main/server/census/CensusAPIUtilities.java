@@ -21,7 +21,6 @@ public class CensusAPIUtilities {
       JsonAdapter<List<List<String>>> adapter = moshi.adapter(listStringObject);
       return adapter.fromJson(json);
     } catch (Exception e) {
-      e.printStackTrace();
       throw e;
     }
   }

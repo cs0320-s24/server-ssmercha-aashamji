@@ -1,12 +1,14 @@
 package edu.brown.cs.student.main.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrganizedData {
   public List results;
   public Parser myParser;
-  boolean loaded;
+  public Map<String, Boolean> pathLoaded = new HashMap<>();
 
   public OrganizedData() {
     results = new ArrayList<>();
@@ -20,13 +22,16 @@ public class OrganizedData {
     myParser = p;
   }
 
-  public void updateState() {
-    loaded = true;
+  public void updateState(String filepath) {
+    pathLoaded.put(filepath, true);
   }
 
-  public boolean isLoaded() {
-    if (loaded) {
-      return true;
+  public boolean isLoaded(String filepath) {
+    if (pathLoaded.containsKey(filepath)) {
+      if (pathLoaded.get(filepath)) {
+        return true;
+      }
+      return false;
     }
     return false;
   }

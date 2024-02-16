@@ -32,28 +32,37 @@ public class loadHandler implements Route {
     Set<String> params = request.queryParams();
     String filepath = request.queryParams("filepath");
     String headers = request.queryParams("headers");
-    Integer h = Integer.parseInt(headers);
-    Map<String, Object> responseMap = new HashMap<>();
-
     Moshi moshi = new Moshi.Builder().build();
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
 
+    Map<String, Object> responseMap = new HashMap<>();
+    Integer h = 0;
     try {
-      FileReader f = new FileReader(filepath);
-      responseMap.put("filepath", filepath);
+      h = Integer.parseInt(headers);
+    } catch (NumberFormatException e) {
+      responseMap.put("result", "error_bad_request");
+      return adapter.toJson(responseMap);
+    }
 
-      Strat s = new Strat();
-      Parser<List<String>> p = new Parser<>(f, s, h);
+    try {
+      if (filepath != null) {
+        FileReader f = new FileReader(filepath);
+        responseMap.put("filepath", filepath);
 
-      myData.updateList(p.parsedData);
-      myData.parserRef(p);
-      myData.updateState();
-      responseMap.put("result", "success");
+        Strat s = new Strat();
+        Parser<List<String>> p = new Parser<>(f, s, h);
+
+        myData.updateList(p.parsedData);
+        myData.parserRef(p);
+        myData.updateState(filepath);
+        responseMap.put("result", "success");
+      } else {
+        responseMap.put("result", "error_bad_request");
+      }
     } catch (FileNotFoundException | FactoryFailureException e) {
       responseMap.put("result", "error_file_loading");
     }
-
     return adapter.toJson(responseMap);
   }
 }

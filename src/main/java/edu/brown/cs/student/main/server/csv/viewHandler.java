@@ -30,10 +30,14 @@ public class viewHandler implements Route {
     Map<String, Object> responseMap = new HashMap<>();
 
     Moshi moshi = new Moshi.Builder().build();
-    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
+    Type mapStringObject = Types.newParameterizedType(Map.class, Object.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
+    if (filepath == null) {
+      responseMap.put("result", "error_bad_request");
+      return adapter.toJson(responseMap);
+    }
 
-    if (myData.isLoaded()) {
+    if (myData.isLoaded(filepath)) {
       try {
         responseMap.put("data", myData.results);
         responseMap.put("result", "success");

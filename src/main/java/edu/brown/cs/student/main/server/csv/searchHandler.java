@@ -23,7 +23,6 @@ public class searchHandler implements Route {
     myData = o;
   }
 
-  // int headers, String identType, String colIdentifier, String word, String filepath
   @Override
   public Object handle(Request request, Response response) throws Exception {
     Map<String, Object> responseMap = new HashMap<>();
@@ -32,7 +31,7 @@ public class searchHandler implements Route {
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
 
-    if (myData.isLoaded()) {
+    if (myData.isLoaded(filepath)) {
       Searcher look = new Searcher(myData.myParser, filepath);
       if (!myData.myParser.error.equals("no error")) {
         responseMap.put("result", myData.myParser.error);
@@ -46,6 +45,15 @@ public class searchHandler implements Route {
         responseMap.put("colIdentifier", colIdentifier);
         String word = request.queryParams("word");
         responseMap.put("word", word);
+
+        if ((h == null)
+            || (identType == null)
+            || (colIdentifier == null)
+            || (word == null)
+            || ((!h.equals("0")) && (!h.equals("1")))) {
+          responseMap.put("result", "error_bad_request");
+          return adapter.toJson(responseMap);
+        }
 
         if (identType.equals("index")) {
           responseMap.put("data", look.search(word, Integer.parseInt(colIdentifier)));
