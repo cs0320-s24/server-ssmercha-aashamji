@@ -28,6 +28,8 @@ public class broadbandHandler implements Route {
     String state = request.queryParams("state");
     String county = request.queryParams("county");
 
+    String query = state + "_" + county;
+
     Moshi moshi = new Moshi.Builder().build();
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);

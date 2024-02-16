@@ -2,6 +2,7 @@ package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
 
+import edu.brown.cs.student.main.server.census.CensusDataSource;
 import edu.brown.cs.student.main.server.census.broadbandHandler;
 import edu.brown.cs.student.main.server.csv.*;
 import java.io.IOException;
@@ -19,7 +20,11 @@ public class Server {
           response.header("Access-Control-Allow-Methods", "*");
         });
 
+    //CensusDataSource directDatasource = new DirectCensus
+
     Spark.get("/", (req, res) -> "welcome to the server.");
+
+
 
     OrganizedData o = new OrganizedData();
 
@@ -27,6 +32,7 @@ public class Server {
     Spark.get("searchcsv", new searchHandler(o));
     Spark.get("viewcsv", new viewHandler(o));
     Spark.get("broadband", new broadbandHandler());
+
 
     Spark.init();
     Spark.awaitInitialization();

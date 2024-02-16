@@ -21,16 +21,15 @@ public class CachingCensusData implements CensusDataSource {
             .build(
                 new CacheLoader<String, CensusData>() {
                   @Override
-                  public CensusData load(String s) throws Exception {
-                    return original.getData();
+                  public CensusData load(String query) throws Exception {
+                    return original.getData(query);
                   }
                 });
   }
-
   @Override
-  public CensusData getData() throws IllegalArgumentException {
+  public CensusData getData(String query) throws IllegalArgumentException {
     try {
-      return cache.get("constantKey");
+      return cache.get(query);
     } catch (ExecutionException e) {
       throw new RuntimeException("Error fetching data from cache.", e);
     }
