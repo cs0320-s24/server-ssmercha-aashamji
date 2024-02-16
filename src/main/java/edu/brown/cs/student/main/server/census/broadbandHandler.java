@@ -27,7 +27,7 @@ public class broadbandHandler implements Route {
   public Object handle(Request request, Response response) throws Exception {
     String state = request.queryParams("state");
     String county = request.queryParams("county");
-
+    String useCache = request.queryParams("useCache");
     String query = state + "_" + county;
 
     Moshi moshi = new Moshi.Builder().build();
