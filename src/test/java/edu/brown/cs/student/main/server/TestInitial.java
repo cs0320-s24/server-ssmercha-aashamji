@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main.server;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -12,18 +14,15 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
-
 import okio.Buffer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import spark.Spark;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class TestInitial {
-  private final Type listListString = Types.newParameterizedType(List.class, List.class, String.class);
+  private final Type listListString =
+      Types.newParameterizedType(List.class, List.class, String.class);
   private JsonAdapter<List<List<String>>> adapter;
 
   @BeforeEach
@@ -73,20 +72,20 @@ public class TestInitial {
     return clientConnection;
   }
 
-    @Test
+  @Test
   // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type
   // checker
-    public void testAPINoRecipes() throws IOException {
-      HttpURLConnection clientConnection = tryRequest("loadcsv");
-      assertEquals(200, clientConnection.getResponseCode());
+  public void testAPINoRecipes() throws IOException {
+    HttpURLConnection clientConnection = tryRequest("loadcsv");
+    assertEquals(200, clientConnection.getResponseCode());
 
-      Moshi moshi = new Moshi.Builder().build();
-      // We'll use okio's Buffer class here
-      String response =
-              moshi
-                      .adapter(String.class)
-                      .fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
+    Moshi moshi = new Moshi.Builder().build();
+    // We'll use okio's Buffer class here
+    String response =
+        moshi
+            .adapter(String.class)
+            .fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
 
-      System.out.println(response);
-    }
+    System.out.println(response);
+  }
 }

@@ -22,6 +22,7 @@ import spark.Route;
 
 public class broadbandHandler implements Route {
   Map<String, Object> responseMap = new HashMap<>();
+  CachingCensusData cache;
 
   @Override
   public Object handle(Request request, Response response) throws Exception {
@@ -30,9 +31,20 @@ public class broadbandHandler implements Route {
     String useCache = request.queryParams("useCache");
     String query = state + "_" + county;
 
+
     Moshi moshi = new Moshi.Builder().build();
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
+
+    if("true".equalsIgnoreCase(useCache)){
+
+      CensusData cachedData = cache.getData(query);
+      if(cachedData == null){
+        return adapter.toJson(cachedData);
+      }
+    } else{
+      //check
+    }
 
     String states = this.sendStateCodesRequest();
 

@@ -3,10 +3,11 @@ package edu.brown.cs.student.main.server.census;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 
 public class CachingCensusData implements CensusDataSource {
 
@@ -29,6 +30,7 @@ public class CachingCensusData implements CensusDataSource {
                   }
                 });
   }
+
   @Override
   public CensusData getData(String query) throws IllegalArgumentException {
     try {
@@ -37,4 +39,8 @@ public class CachingCensusData implements CensusDataSource {
       throw new RuntimeException("Error fetching data from cache.", e);
     }
   }
+
+    public LoadingCache<String, CensusData> getCache() {
+        return cache;
+    }
 }
