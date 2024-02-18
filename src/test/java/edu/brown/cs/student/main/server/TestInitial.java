@@ -1,6 +1,7 @@
 package edu.brown.cs.student.main.server;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -14,6 +15,8 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
+
 import okio.Buffer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,10 +47,7 @@ public class TestInitial {
   @AfterEach
   public void teardown() {
     // Gracefully stop Spark listening on both endpoints after each test
-    Spark.unmap("loadcsv");
-    Spark.unmap("searchcsv");
-    Spark.unmap("viewcsv");
-    Spark.unmap("broadband");
+    Spark.stop();
     Spark.awaitStop(); // don't proceed until the server is stopped
   }
 
@@ -72,20 +72,54 @@ public class TestInitial {
     return clientConnection;
   }
 
-//  @Test
-  // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type
-  // checker
-//  public void testAPINoRecipes() throws IOException {
-//    HttpURLConnection clientConnection = tryRequest("loadcsv");
-//    assertEquals(200, clientConnection.getResponseCode());
-//
+  @Test
+  public void testingLoadCSV() throws IOException {
+    HttpURLConnection connection = tryRequest("loadcsv?filepath=data/RI.csv&headers=0");
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode(), "should be 200");
+
+    String responseJson = new Buffer().readFrom(connection.getInputStream()).readUtf8();
+    Moshi moshi = new Moshi.Builder().build();
+    JsonAdapter<Map<String, String>> jsonAdapter = moshi.adapter(Types.newParameterizedType(Map.class, String.class, String.class));
+
+    Map<String, String> responseMap = jsonAdapter.fromJson(responseJson);
+    assertNotNull(responseMap);
+    assertEquals("success", responseMap.get("result"));
+    assertEquals("data/RI.csv", responseMap.get("filepath"));
+    connection.disconnect();
+  }
+
+  @Test
+  public void testingSearchCSV() throws IOException{
+    HttpURLConnection loadConnection = tryRequest("loadcsv?filepath=data/RI.csv&headers=0");
+    assertEquals(HttpURLConnection.HTTP_OK, loadConnection.getResponseCode(), "should be 200");
+    loadConnection.disconnect();
+
+    HttpURLConnection connection = tryRequest("searchcsv?filepath=data/RI.csv&headers=0&identType=N/A&colIdentifier=N/A&word=Providence");
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode(), "should be 200");
+
+//    String responseJson = new Buffer().readFrom(connection.getInputStream()).readUtf8();
 //    Moshi moshi = new Moshi.Builder().build();
-//    // We'll use okio's Buffer class here
-//    String response =
-//        moshi
-//            .adapter(String.class)
-//            .fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
+//    JsonAdapter<Map<String, Object>> jsonAdapter = moshi.adapter(Types.newParameterizedType(Map.class, String.class, String.class));
 //
-//    System.out.println(response);
-//  }
+//    Map<String, Object> responseMap = jsonAdapter.fromJson(responseJson);
+    //assertNotNull(responseMap);
+    connection.disconnect();
+  }
+
+  @Test
+  public void testingViewCSV() throws IOException{
+
+    HttpURLConnection connection = tryRequest("viewcsv?filepath=data/RI.csv");
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode(), "should be 200");
+
+    String responseJson = new Buffer().readFrom(connection.getInputStream()).readUtf8();
+    Moshi moshi = new Moshi.Builder().build();
+    JsonAdapter<Map<String, String>> jsonAdapter = moshi.adapter(Types.newParameterizedType(Map.class, String.class, String.class));
+
+    Map<String, String> responseMap = jsonAdapter.fromJson(responseJson);
+    assertNotNull(responseMap);
+    connection.disconnect();
+  }
+
+
 }
