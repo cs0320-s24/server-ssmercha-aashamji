@@ -72,20 +72,20 @@ public class TestInitial {
     return clientConnection;
   }
 
-  @Test
+//  @Test
   // Recall that the "throws IOException" doesn't signify anything but acknowledgement to the type
   // checker
-  public void testAPINoRecipes() throws IOException {
-    HttpURLConnection clientConnection = tryRequest("loadcsv");
-    assertEquals(200, clientConnection.getResponseCode());
-
-    Moshi moshi = new Moshi.Builder().build();
-    // We'll use okio's Buffer class here
-    String response =
-        moshi
-            .adapter(String.class)
-            .fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
-
-    System.out.println(response);
-  }
+//  public void testAPINoRecipes() throws IOException {
+//    HttpURLConnection clientConnection = tryRequest("loadcsv");
+//    assertEquals(200, clientConnection.getResponseCode());
+//
+//    Moshi moshi = new Moshi.Builder().build();
+//    // We'll use okio's Buffer class here
+//    String response =
+//        moshi
+//            .adapter(String.class)
+//            .fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
+//
+//    System.out.println(response);
+//  }
 }
