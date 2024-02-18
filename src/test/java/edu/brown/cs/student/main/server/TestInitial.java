@@ -108,6 +108,20 @@ public class TestInitial {
     assertFalse(response.getData().isEmpty());
     connection.disconnect();
   }
+  @Test
+  public void testingSearchCSVThrows() throws IOException{
+
+    HttpURLConnection connection = tryRequest("searchcsv?filepath=data/RI.csv");
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode(), "should not be 200");
+
+    String responseJson = new Buffer().readFrom(connection.getInputStream()).readUtf8();
+    Moshi moshi = new Moshi.Builder().build();
+    JsonAdapter<Map<Object, Object>> jsonAdapter = moshi.adapter(Types.newParameterizedType(Map.class, Object.class, Object.class));
+
+    Map<Object, Object> responseMap = jsonAdapter.fromJson(responseJson);
+    assertNotNull(responseMap);
+    assertEquals("error_file_not_loaded", responseMap.get("result"));
+  }
 
   @Test
   public void testingViewCSV() throws IOException{
@@ -133,7 +147,7 @@ public class TestInitial {
   public void testingViewCSVThrows() throws IOException{
 
     HttpURLConnection connection = tryRequest("viewcsv?filepath=data/RI.csv");
-    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode(), "should not be 200");
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode(), "should be 200");
 
     String responseJson = new Buffer().readFrom(connection.getInputStream()).readUtf8();
     Moshi moshi = new Moshi.Builder().build();
@@ -142,7 +156,58 @@ public class TestInitial {
     Map<Object, Object> responseMap = jsonAdapter.fromJson(responseJson);
     assertNotNull(responseMap);
     assertEquals("error_file_not_loaded", responseMap.get("result"));
+
+    connection.disconnect();
   }
+
+  @Test
+  public void LoadNoFile() throws IOException{
+
+    HttpURLConnection connection = tryRequest("loadcsv?filepath=data&headers=0");
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode(), "should not be 200");
+
+    String responseJson = new Buffer().readFrom(connection.getInputStream()).readUtf8();
+    Moshi moshi = new Moshi.Builder().build();
+    JsonAdapter<Map<Object, Object>> jsonAdapter = moshi.adapter(Types.newParameterizedType(Map.class, Object.class, Object.class));
+
+    Map<Object, Object> responseMap = jsonAdapter.fromJson(responseJson);
+    assertNotNull(responseMap);
+    assertEquals("error_file_loading", responseMap.get("result"));
+    connection.disconnect();
+  }
+
+  @Test
+  public void Fuzz1() throws IOException{
+
+    HttpURLConnection connection = tryRequest("");
+    assertEquals(HttpURLConnection.HTTP_NOT_FOUND, connection.getResponseCode(), "should not be 200");
+  }
+  @Test
+  public void Fuzz2() throws IOException{
+
+    HttpURLConnection connection = tryRequest("pleaseGiveMeACoolCSV");
+    assertEquals(HttpURLConnection.HTTP_NOT_FOUND, connection.getResponseCode(), "should not be 200");
+  }
+  @Test
+  public void Fuzz3() throws IOException{
+
+    HttpURLConnection connection = tryRequest("");
+    assertEquals(HttpURLConnection.HTTP_NOT_FOUND, connection.getResponseCode(), "should not be 200");
+  }
+
+  @Test
+  public void testBroadbandHandlerWithMissingParams() throws IOException{
+
+    HttpURLConnection connection = tryRequest("broadband?state=CA");
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
+    String responseJson = new Buffer().readFrom(connection.getInputStream()).readUtf8();
+    Moshi moshi = new Moshi.Builder().build();
+    JsonAdapter<Map<String, Object>> jsonAdapter = moshi.adapter(Types.newParameterizedType(Map.class, String.class, Object.class));
+    Map<String, Object> responseMap = jsonAdapter.fromJson(responseJson);
+    assertNotNull(responseMap);
+    assertEquals("error_bad_request", responseMap.get("result"));
+  }
+
 
 
 }
