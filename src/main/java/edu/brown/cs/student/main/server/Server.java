@@ -10,6 +10,13 @@ import spark.Spark;
 public class Server {
 
   public static void main(String[] args) throws IOException, FactoryFailureException {
+    /**
+     * This file is responsible for starting up the web server and handling different user requests:
+     * we spark the port to address 3232
+     * we give a welcome message upon visiting the blank api
+     * we initialise the relevant handlers for all api calls
+     * we call init.
+     */
     int port = 3232;
     Spark.port(port);
 

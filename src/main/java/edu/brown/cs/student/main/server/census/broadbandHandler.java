@@ -37,25 +37,25 @@ public class broadbandHandler implements Route {
   public Object handle(Request request, Response response) throws Exception {
     String state = request.queryParams("state");
     String county = request.queryParams("county");
-    String useCache = request.queryParams("useCache");
-    String query = state + "_" + county;
+    //String useCache = request.queryParams("useCache");
+    //String query = state + "_" + county;
 
     Moshi moshi = new Moshi.Builder().build();
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
 
-    if("true".equalsIgnoreCase(useCache)) {
-      CensusData cachedData = cache.getData(query);
-      if (cachedData != null) {
-        //return adapter.toJson(cachedData);
-      } else {
-        //search regularly
-        //add search result to cache
-        //return regular search result
-      }
-    } else{
-      //regular search
-    }
+//    if("true".equalsIgnoreCase(useCache)) {
+//      Map<String, Object> cachedData = cache.getData(query);
+//      if (cachedData != null) {
+//        return adapter.toJson(cachedData);
+//      } else {
+//        //search regularly
+//        //add search result to cache
+//        //return regular search result
+//      }
+//    } else{
+//      //regular search
+//    }
 
     String states =
         this.sendStateCodesRequest(); // to get a String representing all states and their codes
