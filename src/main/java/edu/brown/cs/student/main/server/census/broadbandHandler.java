@@ -44,14 +44,18 @@ public class broadbandHandler implements Route {
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
 
-        if("true".equalsIgnoreCase(useCache)){
-          CensusData cachedData = cache.getData(query);
-          if(cachedData == null){
-            return adapter.toJson(cachedData);
-          }
-        } else{
-          //check
-        }
+    if("true".equalsIgnoreCase(useCache)) {
+      CensusData cachedData = cache.getData(query);
+      if (cachedData != null) {
+        //return adapter.toJson(cachedData);
+      } else {
+        //search regularly
+        //add search result to cache
+        //return regular search result
+      }
+    } else{
+      //regular search
+    }
 
     String states =
         this.sendStateCodesRequest(); // to get a String representing all states and their codes
