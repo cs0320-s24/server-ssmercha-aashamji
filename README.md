@@ -20,3 +20,5 @@ To view a file, append /viewcs?filepath="enter file path here"
 To search a file, append /searchcsv?filepath="enter file path here"&headers="enter 0 if the CSV does not have headers, enter 1 otherwise"0&identType="enter if you are searching by header of by index. if you're searching the entire file, enter N/A"&colIdentifier="either a header name or an index number or N/A if you're searching the entire file"&word="enter the word you're searching for.
 
 example of searching the entire data/RI.csv for the word "Providence": http://localhost:3232/searchcsv?filepath=data/RI.csv&headers=0&identType=N/A&colIdentifier=N/A&word=Providence
+
+Please note: most of our github commits are on the "s" branch, so when evaluating this part of our assignment, we believe looking at this branch would be most representative.
