@@ -2,6 +2,8 @@
 
 > **IMPORTANT NOTE**: In order to run the server, run `mvn package` in your terminal then `./run` (using Git Bash for Windows users). This will be the same as the first Sprint. Take notice when transferring this run sprint to your Sprint 2 implementation that the path of your src.main.edu.brown.cs.student.main.server.Server class matches the path specified in the run script. Currently, it is set to execute src.main.edu.brown.cs.student.main.server.Server at `edu/brown/cs/student/main/server/src.main.edu.brown.cs.student.main.server.Server`. Running through terminal will save a lot of computer resources (IntelliJ is pretty intensive!) in future sprints.
 
+*Please view the "s" branch of our github, it has the most up-to-date code*
+
 # Project Details
 This is  a web API server that enables users to query the United States Census API to retrieve information on broadband coverage. It can also load, view, and search a specific CSV.
 
